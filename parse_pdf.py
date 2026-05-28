@@ -100,7 +100,9 @@ def parse_pdf(pdf_path: Path, out_dir: Path) -> list[Product]:
                 y_center = float(rects[0].y0 + rects[0].y1) / 2 if rects else 0.0
                 fname = img_dir / f"page{page_num:02d}_img{img_idx:02d}.png"
                 pix.save(str(fname))
-                page_imgs.append({"path": str(fname), "y": y_center, "w": pix.width, "h": pix.height})
+                w, h = pix.width, pix.height
+                pix = None  # liberar memoria del Pixmap inmediatamente (clave para 512MB)
+                page_imgs.append({"path": str(fname), "y": y_center, "w": w, "h": h})
             except Exception as e:
                 print(f"[warn] skip image p{page_num} i{img_idx}: {e}", file=sys.stderr)
         # Ordenar por Y ascendente (de arriba abajo)
