@@ -1,0 +1,27 @@
+# Secretos
+.env
+*.key
+
+# Datos generados / pesados
+output/
+data/
+pdfs/
+*.pdf
+*.csv
+*.json
+!.env.example
+
+# Scripts de uso único (no van a producción)
+create_n8n_workflow.py
+upload_poc.py
+generate_preview.py
+poc_preview.py
+cosm-*.txt
+inspect-out.txt
+ia-skus.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
