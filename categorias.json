@@ -1,0 +1,28 @@
+{
+  "_doc": "Taxonomía de catálogos ProTrade. Editás acá → en la próxima corrida del pipeline (diaria 8 AM) la web se actualiza con las nuevas categorías. Cada entrada: la key es un patrón que matchea el nombre del PDF (case-insensitive, substring). Si un PDF nuevo NO matchea ninguno, cae al fallback 'Otros'.",
+  "_default_categoria": "Otros",
+  "_default_subcategoria": "",
+  "mapping": [
+    { "pattern": "anteojos",       "categoria": "Anteojos",     "sub_categoria": "" },
+    { "pattern": "cosmetico",      "categoria": "Cosmética",    "sub_categoria": "Maquillaje" },
+    { "pattern": "art.belle",      "categoria": "Cosmética",    "sub_categoria": "Belleza" },
+    { "pattern": "art belle",      "categoria": "Cosmética",    "sub_categoria": "Belleza" },
+    { "pattern": "perfume",        "categoria": "Cosmética",    "sub_categoria": "Perfumes" },
+    { "pattern": "cortapelos",     "categoria": "Belleza",      "sub_categoria": "Cortapelos" },
+    { "pattern": "depiladora",     "categoria": "Belleza",      "sub_categoria": "Depiladoras" },
+    { "pattern": "electronico",    "categoria": "Electrónica",  "sub_categoria": "" },
+    { "pattern": "c118",           "categoria": "Electrónica",  "sub_categoria": "Promociones" },
+    { "pattern": "c119",           "categoria": "Electrónica",  "sub_categoria": "Promociones" },
+    { "pattern": "c120",           "categoria": "Electrónica",  "sub_categoria": "Promociones" },
+    { "pattern": "luces",          "categoria": "Electrónica",  "sub_categoria": "Iluminación" },
+    { "pattern": "ferreteria",     "categoria": "Ferretería",   "sub_categoria": "" },
+    { "pattern": "surtido",        "categoria": "Bazar",        "sub_categoria": "Surtido" },
+    { "pattern": "invierno",       "categoria": "Hogar",        "sub_categoria": "Invierno" },
+    { "pattern": "camping",        "categoria": "Hogar",        "sub_categoria": "Camping" },
+    { "pattern": "juguetes nuevos","categoria": "Juguetería",   "sub_categoria": "Nuevos" },
+    { "pattern": "juguetes-liquidacion", "categoria": "Juguetería", "sub_categoria": "Liquidación" },
+    { "pattern": "juguetes",       "categoria": "Juguetería",   "sub_categoria": "" },
+    { "pattern": "gorra",          "categoria": "Indumentaria", "sub_categoria": "Gorras" },
+    { "pattern": "mochila",        "categoria": "Indumentaria", "sub_categoria": "Mochilas" }
+  ]
+}
