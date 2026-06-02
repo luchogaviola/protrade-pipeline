@@ -1,28 +1,1289 @@
 {
   "_doc": "Taxonomía de catálogos ProTrade. Editás acá → en la próxima corrida del pipeline (diaria 8 AM) la web se actualiza con las nuevas categorías. Cada entrada: la key es un patrón que matchea el nombre del PDF (case-insensitive, substring). Si un PDF nuevo NO matchea ninguno, cae al fallback 'Otros'.",
   "_default_categoria": "Otros",
-  "_default_subcategoria": "",
+  "_default_subcategoria": "Otros",
   "mapping": [
-    { "pattern": "anteojos",       "categoria": "Anteojos",     "sub_categoria": "" },
-    { "pattern": "cosmetico",      "categoria": "Cosmética",    "sub_categoria": "Maquillaje" },
-    { "pattern": "art.belle",      "categoria": "Cosmética",    "sub_categoria": "Belleza" },
-    { "pattern": "art belle",      "categoria": "Cosmética",    "sub_categoria": "Belleza" },
-    { "pattern": "perfume",        "categoria": "Cosmética",    "sub_categoria": "Perfumes" },
-    { "pattern": "cortapelos",     "categoria": "Belleza",      "sub_categoria": "Cortapelos" },
-    { "pattern": "depiladora",     "categoria": "Belleza",      "sub_categoria": "Depiladoras" },
-    { "pattern": "electronico",    "categoria": "Electrónica",  "sub_categoria": "" },
-    { "pattern": "c118",           "categoria": "Electrónica",  "sub_categoria": "Promociones" },
-    { "pattern": "c119",           "categoria": "Electrónica",  "sub_categoria": "Promociones" },
-    { "pattern": "c120",           "categoria": "Electrónica",  "sub_categoria": "Promociones" },
-    { "pattern": "luces",          "categoria": "Electrónica",  "sub_categoria": "Iluminación" },
-    { "pattern": "ferreteria",     "categoria": "Ferretería",   "sub_categoria": "" },
-    { "pattern": "surtido",        "categoria": "Bazar",        "sub_categoria": "Surtido" },
-    { "pattern": "invierno",       "categoria": "Hogar",        "sub_categoria": "Invierno" },
-    { "pattern": "camping",        "categoria": "Hogar",        "sub_categoria": "Camping" },
-    { "pattern": "juguetes nuevos","categoria": "Juguetería",   "sub_categoria": "Nuevos" },
-    { "pattern": "juguetes-liquidacion", "categoria": "Juguetería", "sub_categoria": "Liquidación" },
-    { "pattern": "juguetes",       "categoria": "Juguetería",   "sub_categoria": "" },
-    { "pattern": "gorra",          "categoria": "Indumentaria", "sub_categoria": "Gorras" },
-    { "pattern": "mochila",        "categoria": "Indumentaria", "sub_categoria": "Mochilas" }
+    {
+      "pattern": "anteojos",
+      "categoria": "Anteojos",
+      "sub_categoria": ""
+    },
+    {
+      "pattern": "cosmetico",
+      "categoria": "Cosmética",
+      "sub_categoria": "Maquillaje"
+    },
+    {
+      "pattern": "art.belle",
+      "categoria": "Cosmética",
+      "sub_categoria": "Belleza"
+    },
+    {
+      "pattern": "art belle",
+      "categoria": "Cosmética",
+      "sub_categoria": "Belleza"
+    },
+    {
+      "pattern": "perfume",
+      "categoria": "Cosmética",
+      "sub_categoria": "Perfumes"
+    },
+    {
+      "pattern": "cortapelos",
+      "categoria": "Belleza",
+      "sub_categoria": "Cortapelos"
+    },
+    {
+      "pattern": "depiladora",
+      "categoria": "Belleza",
+      "sub_categoria": "Depiladoras"
+    },
+    {
+      "pattern": "electronico",
+      "categoria": "Electrónica",
+      "sub_categoria": ""
+    },
+    {
+      "pattern": "c118",
+      "categoria": "Electrónica",
+      "sub_categoria": "Promociones"
+    },
+    {
+      "pattern": "c119",
+      "categoria": "Electrónica",
+      "sub_categoria": "Promociones"
+    },
+    {
+      "pattern": "c120",
+      "categoria": "Electrónica",
+      "sub_categoria": "Promociones"
+    },
+    {
+      "pattern": "luces",
+      "categoria": "Electrónica",
+      "sub_categoria": "Iluminación"
+    },
+    {
+      "pattern": "ferreteria",
+      "categoria": "Ferretería",
+      "sub_categoria": ""
+    },
+    {
+      "pattern": "surtido",
+      "categoria": "Bazar",
+      "sub_categoria": "Surtido"
+    },
+    {
+      "pattern": "invierno",
+      "categoria": "Hogar",
+      "sub_categoria": "Invierno"
+    },
+    {
+      "pattern": "camping",
+      "categoria": "Hogar",
+      "sub_categoria": "Camping"
+    },
+    {
+      "pattern": "juguetes nuevos",
+      "categoria": "Juguetería",
+      "sub_categoria": "Nuevos"
+    },
+    {
+      "pattern": "juguetes-liquidacion",
+      "categoria": "Juguetería",
+      "sub_categoria": "Liquidación"
+    },
+    {
+      "pattern": "juguetes",
+      "categoria": "Juguetería",
+      "sub_categoria": ""
+    },
+    {
+      "pattern": "gorra",
+      "categoria": "Indumentaria",
+      "sub_categoria": "Gorras"
+    },
+    {
+      "pattern": "mochila",
+      "categoria": "Indumentaria",
+      "sub_categoria": "Mochilas"
+    }
+  ],
+  "subcategorias": [
+    {
+      "categoria": "Cosmética",
+      "rules": [
+        {
+          "sub": "Maquillaje labial",
+          "keywords": [
+            "LABIAL",
+            "GLOSS",
+            "TINTE LABIAL",
+            "BRILLO LABIAL",
+            "LIPSTICK",
+            "PINTALABIOS",
+            "ACEITE LABIAL",
+            "BALSAMO LABIAL",
+            "BALSAMO"
+          ]
+        },
+        {
+          "sub": "Rubor / Iluminador",
+          "keywords": [
+            "RUBOR",
+            "RUBO ",
+            "ILUMINADOR",
+            "BLUSH",
+            "BRONZER"
+          ]
+        },
+        {
+          "sub": "Perfumes / Fragancias",
+          "keywords": [
+            "PERFUME",
+            "LATTAFA",
+            "COLONIA",
+            "EAU DE",
+            "FRAGANCIA"
+          ]
+        },
+        {
+          "sub": "Pestanas / Cejas / Ojos",
+          "keywords": [
+            "MASCARA",
+            "PESTANA",
+            "PETANA",
+            "DELINEADOR",
+            "CEJAS",
+            "SOMBRA",
+            "EYELINER",
+            "RIMEL",
+            "PALETA DE SOBRAS",
+            "PALETA DE SOMBRAS",
+            "LASH"
+          ]
+        },
+        {
+          "sub": "Cuidado corporal / Masajeador",
+          "keywords": [
+            "MASAJEADOR",
+            "CORPORAL",
+            "TORNO",
+            "ANTICELULITICO",
+            "REDUCTOR"
+          ]
+        },
+        {
+          "sub": "Salud / Bienestar / Ortopedicos",
+          "keywords": [
+            "PLANTILLA",
+            "REMOVEDOR DE CALLO",
+            "REMOVEDOR DE CALLOS",
+            "REMOVEDOR EXOLIADOR",
+            "QUITACALLOS",
+            "EXTRACTOR DE LECHE",
+            "CALENTADOR DE BIBERONES",
+            "ANTIRRONQUIDO",
+            "ANTIRONQUIDO",
+            "DILATADOR NASAL",
+            "PROTECTOR BUCAL",
+            "PROTECTOR DENTAL",
+            "DIENTES POSTIZOS",
+            "BRUXISMO",
+            "PARCHE GEL FRIO",
+            "CINTA PARA PECHO",
+            "RODILLERA",
+            "CODERA",
+            "CODERO",
+            "CINTURON LUMBAR",
+            "FAJA",
+            "ANTIFAZ",
+            "CHALECO MOLDEADOR",
+            "CHALECO",
+            "GUANTE GEL",
+            "CINTA DE ESTIRAMIENTO",
+            "FASCITIS",
+            "HUMIDIFICADOR",
+            "HUMIFICADOR"
+          ]
+        },
+        {
+          "sub": "Skincare facial / Parches anti-acne",
+          "keywords": [
+            "CREMA FACIAL",
+            "CREMA LIMPIADORA",
+            "CREMA PARA MANO",
+            "SERUM",
+            "MASCARILLA",
+            "PROTECTOR SOLAR",
+            "SACHET LIFTING",
+            "LIFTING",
+            "LIMPIADOR FACIAL",
+            "LIMPIADOR EXTRACTOR",
+            "HIDRATANTE",
+            "GEL SOLIDO",
+            "GEL FACIAL",
+            "PARCHE ESTRELLA",
+            "PARCHE CORAZON",
+            "PARCHE TRANSPARENTE",
+            "MASCARA LED",
+            "PARCHE PARA ACNE",
+            "MINI MASAJEADOR FACIAL",
+            "REMOVEDOR DE LUNARES"
+          ]
+        },
+        {
+          "sub": "Cuidado del cabello (secadores / planchas)",
+          "keywords": [
+            "SECADOR DE PELO",
+            "SECADOR DE CABELLO",
+            "PLANCHA ALISADOR",
+            "PLANCHA DE PELO",
+            "BUCLERA",
+            "AFEITADOR FEMENINA",
+            "AFEITADORA FEMENINA",
+            "AFEITADORA ULTRASONICA"
+          ]
+        },
+        {
+          "sub": "Base / Polvo / Corrector",
+          "keywords": [
+            "BASE LIQUIDA",
+            "POLVO",
+            "CORRECTOR",
+            "CORRECOR",
+            "PREBASE",
+            "CONTORNO",
+            "FOUNDATION",
+            "COMPACTO"
+          ]
+        },
+        {
+          "sub": "Brochas / Accesorios maquillaje",
+          "keywords": [
+            "BROCHA",
+            "BROCHAS",
+            "KIT MAQUILLAJE",
+            "NECESER",
+            "ESPONJA MAQUILLAJE",
+            "ORGANIZADOR DE JOYERIA",
+            "ORGANIZADOR CUADRADO",
+            "ESPEJO DE MAQUILLAJE"
+          ]
+        },
+        {
+          "sub": "Cepillos / Peluqueria / Tijeras",
+          "keywords": [
+            "CEPILLO P/DUCHA",
+            "CEPILLO DE SILICONA",
+            "KIT CEPILLO",
+            "TIJERA DE PELUQ",
+            "PEINE PELUQ",
+            "PELUQUERIA",
+            "PELUQUERA",
+            "QUITAPELOS",
+            "CEPILLO MASAJEADOR",
+            "TIJERITA PARA CUTICULA"
+          ]
+        },
+        {
+          "sub": "Depilacion",
+          "keywords": [
+            "DEPILADOR",
+            "DEPILADORA",
+            "DEPILACION"
+          ]
+        },
+        {
+          "sub": "Esmalte / Unas / Cabinas UV",
+          "keywords": [
+            "ESMALTE",
+            "UNAS",
+            "NAIL",
+            "MANICURA",
+            "PINCEL LINER",
+            "LAMPARA UV",
+            "CABINA P/UNA",
+            "MINI CABINA",
+            "PULIDOR LIMADOR"
+          ]
+        },
+        {
+          "sub": "Otros",
+          "keywords": []
+        }
+      ]
+    },
+    {
+      "categoria": "Electrónica",
+      "rules": [
+        {
+          "sub": "Cargadores / Power Bank",
+          "keywords": [
+            "POWER BANK",
+            "CARGADOR",
+            "BATERIA EXTERNA",
+            "CABEZAL",
+            "CARGA RAPIDO",
+            "BASE DE CARGA INALAMBRICA",
+            "BATERIA SAMUSNG",
+            "BATERIA SAMSUNG"
+          ]
+        },
+        {
+          "sub": "Auriculares / Audio / Microfonos",
+          "keywords": [
+            "AURICULAR",
+            "AURICULARES",
+            "AUDICULAR",
+            "PARLANTE",
+            "MICROFONO",
+            "MICROFONNO",
+            "ESTEREO",
+            "AUDIFONO",
+            "AMPLIFICADOR DE SONIDO"
+          ]
+        },
+        {
+          "sub": "Proyectores / TV Box / Pantallas",
+          "keywords": [
+            "PROYECTOR",
+            "PROYETOR",
+            "TV BOX",
+            "PANTALLA HD",
+            "PANTALLA LCD",
+            "PANTALLA RETRACTIL"
+          ]
+        },
+        {
+          "sub": "Iluminacion LED / Tiras / Carteles LED",
+          "keywords": [
+            "TIRA LED",
+            "LED NEON",
+            "TIRA NEON",
+            "CORTINA DE LUZ",
+            "CONTROLADORA RGB",
+            "IRA LED",
+            "TIRA SUMERGIBLE",
+            "TIRA RGB",
+            "CARTEL LED"
+          ]
+        },
+        {
+          "sub": "Cables / Adaptadores / Zapatillas",
+          "keywords": [
+            "CABLE",
+            "ADAPTADOR",
+            "LIGHTNING",
+            "HDMI",
+            "TIPOC",
+            "ZAPATILLA ALARGUE",
+            "OTG ",
+            "ENCHUFE UNIVERSAL"
+          ]
+        },
+        {
+          "sub": "Iluminacion decorativa / Veladores / Esferas",
+          "keywords": [
+            "BOLA LED",
+            "VELADOR",
+            "LUZ RGB",
+            "LAMPARA RGB",
+            "LUCES LED",
+            "LUCES RGB",
+            "LAMPARA DE MESA",
+            "REFLECTOR LED",
+            "ESFERA DE CRISTAL",
+            "LUZ DE CAMPING",
+            "LUZ DE NOCHE",
+            "GUIRNALDA",
+            "LUZ MULTICOLOR",
+            "LUZ NIEVE",
+            "BANDERA ARGENTINA"
+          ]
+        },
+        {
+          "sub": "Soportes / Accesorios celular",
+          "keywords": [
+            "SOPORTE",
+            "PALO DE SELFIE",
+            "PALO DE SELFE",
+            "TRIPODE",
+            "LUZ DAZZLE",
+            "LUZ LED C/CLIP",
+            "LUZ LED RGB C/CLIP",
+            "FUNDA SILICONA AIRPODS",
+            "FUNDA DE AGUA",
+            "PARASOL",
+            "PORTA CELULAR",
+            "COLGANTE PARA CELULAR",
+            "POP SOCKET"
+          ]
+        },
+        {
+          "sub": "Smartwatch / Wearables",
+          "keywords": [
+            "SMART WATCH",
+            "SMARTWATCH",
+            "SMART BAND",
+            "SMART WACTH",
+            "WATCH",
+            "MALLA",
+            "MALLAS"
+          ]
+        },
+        {
+          "sub": "Energia solar",
+          "keywords": [
+            "SOLAR",
+            "PANEL SOLAR"
+          ]
+        },
+        {
+          "sub": "Camaras",
+          "keywords": [
+            "CAMARA"
+          ]
+        },
+        {
+          "sub": "PC / Gaming / Perifericos",
+          "keywords": [
+            "MOUSE",
+            "TECLADO",
+            "PERIFERICOS",
+            "GAMER",
+            "PAD GAMER",
+            "DISCO DURO",
+            "CONSOLA",
+            "GAME STICK",
+            "GAME CONSOLE",
+            "SEGA CONSOLA",
+            "JOYSTICK"
+          ]
+        },
+        {
+          "sub": "Pequenos electronicos / Otros",
+          "keywords": [
+            "SOPLADOR",
+            "ASPIRADORA",
+            "CONTROL REMOTO",
+            "REPELENTE ULTRASONICO",
+            "TERMOMETRO DIGITAL",
+            "KIT DE TRONO",
+            "CAMISETA SELECCION",
+            "GORRO AFA",
+            "PARCHE DESINTOXICANTE",
+            "KIT CORTAPELO",
+            "KN95",
+            "GUANTE PVC"
+          ]
+        },
+        {
+          "sub": "Linternas / Luz de emergencia",
+          "keywords": [
+            "LINTERNA",
+            "LUZ DE EMERGENCIA",
+            "LUZ MINERO"
+          ]
+        },
+        {
+          "sub": "Mini impresoras / Memorias",
+          "keywords": [
+            "MINI IMPRESORA",
+            "IMPRESORA PORTATIL",
+            "TARJETA DE MEMORIA"
+          ]
+        },
+        {
+          "sub": "Radios / Walkie talkie",
+          "keywords": [
+            "RADIO",
+            "WALKI TALKI",
+            "WALKIE TALKIE"
+          ]
+        },
+        {
+          "sub": "Otros",
+          "keywords": []
+        }
+      ]
+    },
+    {
+      "categoria": "Juguetería",
+      "rules": [
+        {
+          "sub": "Peluches / Munecos / Personajes",
+          "keywords": [
+            "PELUCHE",
+            "MUNECO",
+            "MUNECOS",
+            "MUNECA",
+            "MUNEQUITO",
+            "LABUBU",
+            "CAPYBARA",
+            "STITCH",
+            "STICH",
+            "SONIC",
+            "POKEMON",
+            "KUROMI",
+            "TOY STORY",
+            "PERSONAJE",
+            "PERSONAJES",
+            "BLISTER",
+            "SANRIO",
+            "BRIANTROT",
+            "BRIANROT",
+            "BRAINROT",
+            "BRIAN ROT",
+            "CACTUS BAILARIN",
+            "CHIFLE BRIANROT",
+            "CRY BABIES",
+            "POOPSIE",
+            "POPSIER",
+            "PIKMI POPS",
+            "STRANGER THINGS",
+            "HARRY POTTER",
+            "DEMON ELAYER",
+            "FORTNITE",
+            "FORNITE",
+            "FUBKO POP",
+            "POPPY",
+            "SALCHICHA SI RELLENO",
+            "AUTOBUS MESII",
+            "LIGHT YEAR",
+            "BAILARIN PICACHU",
+            "BAILARIN ARGENTINA",
+            "MASCARA SQUID GAME",
+            "PIKACHU",
+            "MU;ECO"
+          ]
+        },
+        {
+          "sub": "Squishy / Antiestres / POP / Spinners",
+          "keywords": [
+            "SQUISHY",
+            "SQUISH",
+            "ANTIESTRES",
+            "ANTI ESTRES",
+            "POP IT",
+            "POT IT",
+            "FIDGET",
+            "POP ",
+            "SOBRE SORPRESA",
+            "SPINNER",
+            "TROMPO"
+          ]
+        },
+        {
+          "sub": "Camaras infantiles / Impresoras",
+          "keywords": [
+            "CAMARA IMPRESORA",
+            "CAMARA DIGITAL INFANTIL",
+            "IMPRESORA INFANTIL",
+            "MINI CAMARA"
+          ]
+        },
+        {
+          "sub": "Cartas / Juegos de mesa / Tamagotchi",
+          "keywords": [
+            "CARTAS",
+            "JUEGO DE MESA",
+            "NAIPES",
+            "POKER",
+            "UNO",
+            "TAMAGOTCHI",
+            "TAMAGOCHI",
+            "JUEGO DE BASTA",
+            "CUBO MAGICO",
+            "TORTUGA INGENIO",
+            "CUBO MAGICO JUEGO LABERINTO"
+          ]
+        },
+        {
+          "sub": "Pelotas / Deportes / Barriletes",
+          "keywords": [
+            "PELOTA",
+            "FUTBOL",
+            "RUGBY",
+            "BANDA ELASTICA",
+            "BARRILETES"
+          ]
+        },
+        {
+          "sub": "Pizarras / Didacticos / Maletines",
+          "keywords": [
+            "PIZARRA",
+            "TARJETAS FLASH",
+            "LECTORA DITACTICO",
+            "DIDACTICO",
+            "APRENDIZAJE",
+            "MALETA DE DUBUJO",
+            "MALETIN DE MAQUILLAJE",
+            "KIT DE MAQUILLAJE INFANTIL",
+            "KIT LIMPIEZA PARA BEBE",
+            "V6438",
+            "STICKER PARA CARA"
+          ]
+        },
+        {
+          "sub": "Consolas / Videojuegos",
+          "keywords": [
+            "CONSOLA",
+            "JOYSTICK",
+            "GAME STICK",
+            "GAME CONSOLE",
+            "SEGA"
+          ]
+        },
+        {
+          "sub": "Vehiculos R/C / Aviones / Drones",
+          "keywords": [
+            "AUTO A CONTROL",
+            "AUTO CONTROL",
+            "AUTO HOT WHEELS",
+            "AUTO CARS",
+            "AVION",
+            "DRON",
+            "CAMIONETA",
+            "MOTO JUGUETE"
+          ]
+        },
+        {
+          "sub": "Cumpleanos / Globos / Cotillon",
+          "keywords": [
+            "GLOBOS",
+            "GLOBO ",
+            "FAJA CUMPLEANOS",
+            "GORRO GOMA EVA",
+            "CUMPLEANO"
+          ]
+        },
+        {
+          "sub": "Accesorios pelo / Mechas / Extension",
+          "keywords": [
+            "MECHA",
+            "MECHITAS",
+            "EXTENSION DE CABELLO"
+          ]
+        },
+        {
+          "sub": "Punteros / Lapices 3D / Novedades luminicas",
+          "keywords": [
+            "LAPIZ 3D",
+            "PUNTERO LASER",
+            "BOLA LED CRISTAL",
+            "RELOJ PERSONAJE",
+            "GLOBO CON LED",
+            "RELOJ CON TAPA",
+            "ESCUDO DE CAPITAL AMERICA",
+            "VINCHA CON LUZ"
+          ]
+        },
+        {
+          "sub": "Decoracion infantil / Otros",
+          "keywords": [
+            "VELADOR CRISTAL",
+            "APLICADOR DE STRASS",
+            "RESPUESTO PARA APLICADOR",
+            "ROLLO DE RED",
+            "ANTEOJO DE SOL PARA NINO"
+          ]
+        },
+        {
+          "sub": "Carteras / Mochilas infantiles / Carteritas",
+          "keywords": [
+            "CARTERA GRANDE",
+            "CARTERA UNICORN",
+            "CARTERA PERSONAJE",
+            "CARTERITA"
+          ]
+        },
+        {
+          "sub": "Figuras / Coleccionables / Magneticos",
+          "keywords": [
+            "FIGURA",
+            "COLECCIONABLE",
+            "SET PERSONAJES",
+            "COLGANTE",
+            "CUBO MAGNETICO"
+          ]
+        },
+        {
+          "sub": "Pistolas de juguete / Lanzadores",
+          "keywords": [
+            "GUANTE DE HOMBRE ARANA",
+            "LANZADOR DARDOS",
+            "PISTOLA JUGUETE",
+            "ARMA JUGUETE"
+          ]
+        },
+        {
+          "sub": "Otros",
+          "keywords": []
+        }
+      ]
+    },
+    {
+      "categoria": "Bazar",
+      "rules": [
+        {
+          "sub": "Cuchilleria / Cubiertos",
+          "keywords": [
+            "CUCHILLO",
+            "CUCHILLOS",
+            "HACHA",
+            "TIJERA",
+            "SET DE CUBIERTOS",
+            "CUBIERTOS"
+          ]
+        },
+        {
+          "sub": "Electrodomesticos cocina",
+          "keywords": [
+            "FREIDORA",
+            "LICUADORA",
+            "BATIDOR",
+            "TRITURADOR",
+            "MOLINILLO",
+            "TOSTADORA",
+            "PROCESADORA",
+            "CAFETERA",
+            "EXPRIMIDOR",
+            "POCHOCLERA",
+            "CALENTADOR Y MEZCLADOR DE CAFE",
+            "MAQUINA DE DONAS",
+            "PELADORA",
+            "MINI LAVADERO"
+          ]
+        },
+        {
+          "sub": "Cintas / Adaptadores / Otros",
+          "keywords": [
+            "ACERO",
+            "INOXIDABLE",
+            "CINTA NANO",
+            "CINTA ",
+            "NANO",
+            "BOTON",
+            "PARASOL",
+            "ZAPATILLA ALARGUE",
+            "ADAPTADOR ENCHUFE",
+            "SOPORTE POP SOCKET",
+            "PORTA CELULAR",
+            "FILAMENTOS PARA LAPIZ 3D",
+            "FUNDA IMPERMEABLE",
+            "GORRA NINO",
+            "HEBILLA",
+            "JUEGO DE MESA",
+            "SILVATO"
+          ]
+        },
+        {
+          "sub": "Pilas / Baterias",
+          "keywords": [
+            "PILA",
+            "PILAS",
+            "ALCALINA",
+            "BATERIA"
+          ]
+        },
+        {
+          "sub": "Ventiladores / Mata mosquitos / Repelentes",
+          "keywords": [
+            "VENTILADOR",
+            "MATA MOSQUITO",
+            "RAQUETA MATA",
+            "REPELENTE",
+            "MALLA CORTINA MOSQUETERA"
+          ]
+        },
+        {
+          "sub": "Utensilios / Moldes / Pelado",
+          "keywords": [
+            "MOLDE",
+            "BANDEJA",
+            "MANGO",
+            "UTENSILIO",
+            "ESPATULA",
+            "PINZA",
+            "CUCHARA",
+            "SILICONA",
+            "TENDER DE ROPA",
+            "PELADOR",
+            "RALLADOR",
+            "SACACORCHO"
+          ]
+        },
+        {
+          "sub": "Cuidado mascotas",
+          "keywords": [
+            "MASCOTA",
+            "COLLAR PET",
+            "GARRA DE GATO"
+          ]
+        },
+        {
+          "sub": "Vapor / Sellado / Esterilizadores",
+          "keywords": [
+            "VAPOR",
+            "SELLADORA",
+            "SELLADOR AL VACIO",
+            "ESTERILIZADOR",
+            "ELIMINADOR DE OLORES",
+            "GENERADOR DE OZONO"
+          ]
+        },
+        {
+          "sub": "Cuidado del cabello / Belleza electrica",
+          "keywords": [
+            "SECADOR DE PELO",
+            "PLANCHA ALISADOR",
+            "AFEITADORA ELECTRICA",
+            "CORTA PELO",
+            "CORTAPELO",
+            "CEPILLO LIMPIADOR DENTAL"
+          ]
+        },
+        {
+          "sub": "Salud / Cuidado personal",
+          "keywords": [
+            "PARCHE PARA ALIVIAR",
+            "DIENTES POSTIZOS",
+            "SET DE VIAJE",
+            "MINI MASAJEADOR",
+            "BANDA ELASTICA",
+            "MANOPLA P/DEFENSA",
+            "KN95"
+          ]
+        },
+        {
+          "sub": "Camping / Carpas / Inflables",
+          "keywords": [
+            "CARPA CAMPING",
+            "SILLON INFLABLE"
+          ]
+        },
+        {
+          "sub": "Relojes despertador / Decoracion",
+          "keywords": [
+            "RELOJ DESPERTADOR",
+            "PERFUME PARA PLACAR",
+            "AROMATIZADOR DIFUSOR",
+            "PIZARRA ADHESIVA"
+          ]
+        },
+        {
+          "sub": "Manejo de dinero",
+          "keywords": [
+            "CONTADORA DE BILLETES",
+            "ENFAJADORA",
+            "BILLETES"
+          ]
+        },
+        {
+          "sub": "Reutilizables / Almacenamiento",
+          "keywords": [
+            "REUTILIZABLE",
+            "CONTENEDOR",
+            "TAPER",
+            "BOLSA VACIO",
+            "BOLSA DE SELLADO"
+          ]
+        },
+        {
+          "sub": "Termicas / Botellas (bazar)",
+          "keywords": [
+            "BOTELLA DE AGUA",
+            "TERMO BOTELLA"
+          ]
+        },
+        {
+          "sub": "Encendedores / Chisperos",
+          "keywords": [
+            "CHISPERO",
+            "ENCENDEDOR ELECTRICO"
+          ]
+        },
+        {
+          "sub": "Otros",
+          "keywords": []
+        }
+      ]
+    },
+    {
+      "categoria": "Ferretería",
+      "rules": [
+        {
+          "sub": "Herramientas manuales / Sets / Brocas",
+          "keywords": [
+            "DESTORNILLADOR",
+            "ALICATE",
+            "TENAZA",
+            "MARTILLO",
+            "PUNTAS",
+            "JUEGO DE HERRAMIENTAS",
+            "KIT HERRAMIENTAS",
+            "TUBOS",
+            "LLAVE",
+            "BROCAS",
+            "TRINCHETA",
+            "MALETIN DE HERRAMIENTAS",
+            "RESINA PARA SOLDADURA",
+            "RODILLOS PARA LEVENTAR"
+          ]
+        },
+        {
+          "sub": "Herramientas electricas / Soldadores",
+          "keywords": [
+            "SOLDADOR",
+            "SOPLETE",
+            "TALADRO",
+            "AMOLADORA",
+            "SIERRA",
+            "PISTOLA ENCOLADORA",
+            "BOMBA MOTOR",
+            "DISCO DE CORTE",
+            "PIEDRA DE AFILAR",
+            "PIEDRA PARA AFILAR",
+            "SOPORTE AJUSTABLE DE PIEDRA"
+          ]
+        },
+        {
+          "sub": "Linternas",
+          "keywords": [
+            "LINTERNA"
+          ]
+        },
+        {
+          "sub": "Bicicleta / Auto / Electricidad",
+          "keywords": [
+            "BICICLETA",
+            "ENCHUFE",
+            "CABLE POWER",
+            "BATERIA",
+            "ADAPTADOR"
+          ]
+        },
+        {
+          "sub": "Seguridad / Defensa personal / Sensores",
+          "keywords": [
+            "GAS PIMIENTA",
+            "CANDADO",
+            "CANDANDO",
+            "ALARMA",
+            "SENSOR"
+          ]
+        },
+        {
+          "sub": "Iluminacion LED / Guirnaldas",
+          "keywords": [
+            "TIRA LED",
+            "LED NEON",
+            "TIRA NEON",
+            "CONTROLADORA RGB",
+            "VELADOR LED",
+            "VELADOR",
+            "GUIRNALDA"
+          ]
+        },
+        {
+          "sub": "Medicion / Balanzas",
+          "keywords": [
+            "CINTA METRICA",
+            "METRO",
+            "NIVEL",
+            "BALANZA",
+            "MEDIDOR DE DISTANCIA"
+          ]
+        },
+        {
+          "sub": "Plomeria / Sanitario / Bano",
+          "keywords": [
+            "GRIFO",
+            "CANILLA",
+            "CHORRO",
+            "DISPENSER DE AGUA",
+            "PURIFICADOR DE AGUA",
+            "REPUESTO DE FILTRO",
+            "FILTRO PARA PURIFICADOR",
+            "MONOCOMANDO",
+            "MOMONCOMANDO",
+            "DUCHA MONOCOMANDO",
+            "JUEGO ACCESORIO BANO"
+          ]
+        },
+        {
+          "sub": "Camping / Calentadores / Anafes",
+          "keywords": [
+            "CAMPING",
+            "CARPA",
+            "CALENTADOR",
+            "ANAFE",
+            "HORNALLA",
+            "COLCHONETA INFLABLE"
+          ]
+        },
+        {
+          "sub": "Compresores / Infladores / Arrancadores",
+          "keywords": [
+            "COMPRESOR",
+            "INFLADOR",
+            "ARRANCADOR"
+          ]
+        },
+        {
+          "sub": "Aspiradoras / Sopladores",
+          "keywords": [
+            "ASPIRADORA",
+            "SOPLADOR"
+          ]
+        },
+        {
+          "sub": "Control de plagas / Trampas",
+          "keywords": [
+            "TRAMPA ADHESIVA",
+            "ATRAPA MOSCAS",
+            "VENENO PARA RATAS",
+            "REPELENTE ULTRASONICO"
+          ]
+        },
+        {
+          "sub": "Decoracion / Cortinas",
+          "keywords": [
+            "CORTINA",
+            "门帘"
+          ]
+        },
+        {
+          "sub": "Otros",
+          "keywords": []
+        }
+      ]
+    },
+    {
+      "categoria": "Indumentaria",
+      "rules": [
+        {
+          "sub": "Cartucheras / Utiles escolares",
+          "keywords": [
+            "CARTUCHERA",
+            "CALCULADORA",
+            "NOTA ADHESIVA",
+            "CUADERNO",
+            "LAPICERA",
+            "RESALTADOR",
+            "ABROCHADORA",
+            "BROCHE",
+            "BROCHES",
+            "PAPEL FLUORESCENTE",
+            "SACABOCADO",
+            "PINCELES",
+            "PEGAMENTO"
+          ]
+        },
+        {
+          "sub": "Botellas / Vasos termicos",
+          "keywords": [
+            "BOTELLA",
+            "VASO",
+            "TERMICO",
+            "TERMICA",
+            "TERMO",
+            "SORBETE"
+          ]
+        },
+        {
+          "sub": "Mochilas / Carteras / Bolsos",
+          "keywords": [
+            "MOCHILA",
+            "CARTERA",
+            "BOLSO",
+            "MORRAL",
+            "RINONERA",
+            "LUNCHERA"
+          ]
+        },
+        {
+          "sub": "Gorras / Sombreros",
+          "keywords": [
+            "GORRA",
+            "SOMBRERO",
+            "BOINA",
+            "PESQUERA"
+          ]
+        },
+        {
+          "sub": "Relojes despertador",
+          "keywords": [
+            "RELOJ DESPERTADOR",
+            "DESPERTADOR"
+          ]
+        },
+        {
+          "sub": "Paraguas / Pilotos",
+          "keywords": [
+            "PARAGUAS",
+            "PILOTO DE LLUVIA"
+          ]
+        },
+        {
+          "sub": "Otros",
+          "keywords": []
+        }
+      ]
+    },
+    {
+      "categoria": "Belleza",
+      "rules": [
+        {
+          "sub": "Cortapelo / Patilleras",
+          "keywords": [
+            "CORTAPELO",
+            "CORTA PELO",
+            "CORTAR PELO",
+            "PATILLERA",
+            "TRIMMER",
+            "DAING",
+            "MAQUINA CORTA PELO",
+            "MAQUINA CORTAR PELO"
+          ]
+        },
+        {
+          "sub": "Afeitadoras",
+          "keywords": [
+            "AFEITADOR",
+            "AFEITADORA",
+            "SHAVER"
+          ]
+        },
+        {
+          "sub": "Depiladoras corporales / faciales",
+          "keywords": [
+            "DEPILADOR",
+            "DEPILADORA",
+            "DEPILACION"
+          ]
+        },
+        {
+          "sub": "Aseo personal / Espejos / Cepillos",
+          "keywords": [
+            "ASEO",
+            "KIT ASEO",
+            "ESPEJO",
+            "CEPILLO",
+            "PLANCHITA",
+            "BUCLERA",
+            "MASAJEADOR",
+            "PULIDOR LIMADOR DE UNAS",
+            "ORGANIZADOR"
+          ]
+        },
+        {
+          "sub": "Limpieza facial / Puntos negros",
+          "keywords": [
+            "LIMPIADOR EXTRACTOR",
+            "PUNTOS NEGROS",
+            "ESPATULA FACIAL",
+            "MASCARILLA NASAL",
+            "MASCARILLA FACIAL",
+            "REMOVEDOR EXOLIADOR",
+            "QUITACALLOS"
+          ]
+        },
+        {
+          "sub": "Maquinas corporales / faciales",
+          "keywords": [
+            "MAQUINA CORPORAL",
+            "MAQUINA FACIAL",
+            "FACIAL DALING",
+            "CORPORAL DALING"
+          ]
+        },
+        {
+          "sub": "Otros",
+          "keywords": []
+        }
+      ]
+    },
+    {
+      "categoria": "Hogar",
+      "rules": [
+        {
+          "sub": "Guantes",
+          "keywords": [
+            "GUANTE",
+            "GUANTES"
+          ]
+        },
+        {
+          "sub": "Pijamas",
+          "keywords": [
+            "PIJAMA"
+          ]
+        },
+        {
+          "sub": "Medias / Calcetines / Calzas",
+          "keywords": [
+            "MEDIAS",
+            "MEDIA",
+            "CALCETIN",
+            "CALZA TERMICA"
+          ]
+        },
+        {
+          "sub": "Bufandas / Gorros",
+          "keywords": [
+            "BUFANDA",
+            "GORRO"
+          ]
+        },
+        {
+          "sub": "Calentadores / Bolsas agua caliente",
+          "keywords": [
+            "CALENTADOR",
+            "BOLSA DE AGUA CALIENTE"
+          ]
+        },
+        {
+          "sub": "Termicos / Polar / Conjuntos",
+          "keywords": [
+            "POLAR",
+            "TERMICO",
+            "CONJUNTO FRIZADO",
+            "CONJUNTO TERMICO"
+          ]
+        },
+        {
+          "sub": "Otros",
+          "keywords": []
+        }
+      ]
+    },
+    {
+      "categoria": "Anteojos",
+      "rules": [
+        {
+          "sub": "Lentes de sol",
+          "keywords": [
+            "LENTES DE SOL",
+            "LENTE DE SOL",
+            "GAFAS DE SOL"
+          ]
+        },
+        {
+          "sub": "Armazones / Lectura",
+          "keywords": [
+            "ANTEOJOS",
+            "ARMAZON",
+            "LECTURA",
+            "GRADUADO"
+          ]
+        },
+        {
+          "sub": "Otros",
+          "keywords": []
+        }
+      ]
+    }
   ]
 }

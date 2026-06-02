@@ -76,14 +76,15 @@ def safe_sku(s: str) -> str:
 
 
 def load_categorias():
-    """Carga el mapeo PDF → categoría/sub_categoria desde categorias.json"""
+    """Carga taxonomía: mapping PDF→categoría madre + subcategorias por keyword en ARTICULO."""
     if not CATEGORIAS_JSON.exists():
-        return [], "Otros", ""
+        return [], [], "Otros", "Otros"
     cfg = json.loads(CATEGORIAS_JSON.read_text(encoding="utf-8"))
     return (
         cfg.get("mapping", []),
+        cfg.get("subcategorias", []),
         cfg.get("_default_categoria", "Otros"),
-        cfg.get("_default_subcategoria", ""),
+        cfg.get("_default_subcategoria", "Otros"),
     )
 
 
@@ -96,6 +97,48 @@ def map_categoria(pdf_source: str, mapping: list, default_cat: str, default_sub:
         if rule.get("pattern", "").lower() in name:
             return rule.get("categoria", default_cat), rule.get("sub_categoria", default_sub)
     return default_cat, default_sub
+
+
+def _normalize(s: str) -> str:
+    """Normaliza para matching: uppercase + sin acentos + sin ñ."""
+    if not s:
+        return ""
+    s = s.upper()
+    trans = str.maketrans("ÁÉÍÓÚÜÑ", "AEIOUUN")
+    return s.translate(trans)
+
+
+def _build_sub_index(subcategorias_cfg: list) -> dict:
+    """Pre-indexa la config de subcategorias por categoría madre.
+    Devuelve {categoria_norm: [(sub_name, [kw_norm,...]), ...]}"""
+    idx = {}
+    for entry in subcategorias_cfg:
+        cat_key = _normalize(entry.get("categoria", ""))
+        rules = []
+        for r in entry.get("rules", []):
+            kws = [_normalize(k) for k in r.get("keywords", []) if k]
+            rules.append((r.get("sub", "Otros"), kws))
+        idx[cat_key] = rules
+    return idx
+
+
+def assign_subcategoria(categoria: str, articulo: str, sub_index: dict, default_sub: str = "Otros") -> str:
+    """Asigna SUB_CATEGORIA buscando keywords en ARTICULO. Primer-match-wins.
+    Si no hay reglas para la categoría madre o ningún keyword matchea → 'Otros'."""
+    cat_key = _normalize(categoria)
+    rules = sub_index.get(cat_key)
+    if not rules:
+        return default_sub
+    art_norm = _normalize(articulo)
+    if not art_norm:
+        return "Otros"
+    for sub_name, kws in rules:
+        if not kws:  # catch-all "Otros" al final
+            continue
+        for kw in kws:
+            if kw and kw in art_norm:
+                return sub_name
+    return "Otros"
 
 
 def scan_user_skus() -> dict:
@@ -123,9 +166,11 @@ def main():
     blue = data["dolar_blue_venta"]
 
     user_skus = scan_user_skus()
-    mapping, def_cat, def_sub = load_categorias()
+    mapping, subcategorias_cfg, def_cat, def_sub = load_categorias()
+    sub_index = _build_sub_index(subcategorias_cfg)
     overrides = fetch_sheet_overrides()
-    print(f"Productos: {len(products)} | SKUs con imagen IA del user: {len(user_skus)} | reglas de categorías: {len(mapping)} | overrides manuales del Sheet: {len(overrides)}")
+    total_sub_rules = sum(len(v) for v in sub_index.values())
+    print(f"Productos: {len(products)} | SKUs con imagen IA: {len(user_skus)} | mapping PDFs: {len(mapping)} | sub rules: {total_sub_rules} | overrides Sheet: {len(overrides)}")
 
     hoy = date.today().isoformat()
     rows = []
@@ -138,6 +183,7 @@ def main():
     matched_overrides_precio = 0
     matched_overrides_imagen = 0
     categorias_count = {}
+    sub_count = {}
     for sku, p in by_sku.items():
         sku_s = safe_sku(sku)
         img_prov = f"{SUPA_PUBLIC}/proveedor/{sku_s}.png"
@@ -161,9 +207,13 @@ def main():
 
         imagen_final = img_manual or img_prov
 
-        # Mapeo de categoría unificada (taxonomía propia, independiente del nombre del PDF)
-        categoria, sub_categoria = map_categoria(p.get("pdf_source", ""), mapping, def_cat, def_sub)
+        # Categoría madre desde nombre del PDF (taxonomía propia, no del PDF)
+        categoria, _ = map_categoria(p.get("pdf_source", ""), mapping, def_cat, def_sub)
+        # Subcategoría por keyword en ARTICULO (primer-match-wins)
+        sub_categoria = assign_subcategoria(categoria, p["descripcion"], sub_index, def_sub)
         categorias_count[categoria] = categorias_count.get(categoria, 0) + 1
+        sub_key = f"{categoria} / {sub_categoria}"
+        sub_count[sub_key] = sub_count.get(sub_key, 0) + 1
 
         rows.append({
             "IMAGEN": imagen_final,
@@ -212,6 +262,12 @@ def main():
     print(f"\nCategorías unificadas:")
     for cat, n in sorted(categorias_count.items(), key=lambda x: -x[1]):
         print(f"  {n:>5}  {cat}")
+    print(f"\nTop 25 subcategorías:")
+    for k, n in sorted(sub_count.items(), key=lambda x: -x[1])[:25]:
+        print(f"  {n:>5}  {k}")
+    otros = sum(n for k, n in sub_count.items() if k.endswith(" / Otros"))
+    cobertura = (len(rows) - otros) / len(rows) * 100 if rows else 0
+    print(f"\nProductos en 'Otros': {otros} ({100 - cobertura:.1f}%) | cobertura subcategorización: {cobertura:.1f}%")
     print(f"\nCSV:  {csv_path}")
     print(f"JSON: {json_path}")
 
