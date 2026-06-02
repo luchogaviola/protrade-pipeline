@@ -270,7 +270,7 @@ def main():
                 d = asdict(p)
                 d["y_position"] = round(p.y_position, 1)
                 d["costo_ars"] = round(p.costo_usd * blue, 0)
-                d["precio_30"] = round(p.costo_usd * blue * 1.30, 0)
+                d["precio_30"] = round(p.costo_usd * blue * 1.20, 0)  # margen 20% (field name kept for compat)
                 d["pdf_source"] = pdf.name
                 d["imagen_local"] = (Path(p.imagen_local).name if p.imagen_local else None)
                 all_products.append(d)
