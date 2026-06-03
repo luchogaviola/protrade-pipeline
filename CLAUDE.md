@@ -47,7 +47,7 @@ Web (protrade-web-mayorista) lee catalogo.json cada 5 min
 
 ### 1. Precios (cómo se calculan)
 - Si el Sheet tiene `precio_manual` con valor → se usa ese (override del user).
-- Sino: `COSTO USD × dolar_blue_venta × 1.20` (margen mayorista 20%). El 20% es el margen mayorista estándar (antes era 30%, cambiado el 2026-06-02).
+- Sino: `COSTO USD × dolar_blue_venta × 1.10` (margen mayorista 10%). El 10% es el margen mayorista actual (histórico: 30% hasta 2026-06-02, 20% hasta 2026-06-03, 10% desde 2026-06-03).
 - El dólar blue se trae de [dolarapi.com](https://dolarapi.com) (campo `venta`).
 - NUNCA hardcodear precios en el código. Toda la lógica debe pasar por estas 2 fórmulas.
 

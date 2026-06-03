@@ -146,7 +146,7 @@ def main():
                 from dataclasses import asdict
                 d = asdict(p)
                 d["costo_ars"] = round(p.costo_usd * blue, 0)
-                d["precio_30"] = round(p.costo_usd * blue * 1.2, 0)  # margen 20% (legacy name kept)
+                d["precio_30"] = round(p.costo_usd * blue * 1.1, 0)  # margen 10% (legacy name kept)
                 d["pdf_source"] = pdf.name
                 d["imagen_local"] = Path(p.imagen_local).name if p.imagen_local else None
                 all_products.append(d)

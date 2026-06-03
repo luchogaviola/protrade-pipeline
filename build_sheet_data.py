@@ -6,7 +6,7 @@ Columnas de salida (orden del sheet):
   IMAGEN | COD. ART. | RUBRO | ARTICULO | COSTO USD | UN. x BULTO |
   imagen_proveedor | imagen_manual | imagen_contexto | precio_manual | activo | ultima_act
 
-Las fórmulas (COSTO ARS, PRECIO ARS +20%, EFECTIVO, TRANSFERENCIA) las pone el sheet.
+Las fórmulas (COSTO ARS, PRECIO ARS +10%, EFECTIVO, TRANSFERENCIA) las pone el sheet.
 """
 import json
 import re
