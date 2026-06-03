@@ -254,3 +254,5 @@ with urllib.request.urlopen(req, timeout=30) as r:
 - **Sheet (LISTA_MAYORISTA_PROTRADE)**: `1VkumWHXdcaYXolwMoK9qSr9VSoCr-u5TQGZ8B7LhloE`, gid `1028595591`
 - **n8n Komercia**: `komercia-n8n.lzzo0i.easypanel.host`
 - **WhatsApp checkout (consumidor del catálogo)**: +54 9 11 6267-0551
+
+> **NOTA INFRA (2026-06-03):** Los repos de Komercia se movieron de la org GitHub `komercia-agency` (plan Free, sin branch protection en privados) a la cuenta personal `luchogaviola` (plan Pro, con branch protection). La org `komercia-agency` queda vacía 30-60 días para que los redirects 301 sigan funcionando; después se elimina. Si encontrás referencias a `github.com/komercia-agency/X` en este repo, reemplazá por `github.com/luchogaviola/X`.
