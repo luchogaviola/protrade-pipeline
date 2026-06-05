@@ -141,6 +141,7 @@ def parse_pdf(pdf_path: Path, out_dir: Path) -> list[Product]:
                     if all(k in detected for k in ("sku", "desc", "bulto", "costo")):
                         cached_col_idx = detected
                         break
+            page.flush_cache()  # liberar cache pdfplumber de la página (evita OOM en PDFs grandes)
 
     # Fallback inteligente según número de columnas observadas
     if not cached_col_idx:
@@ -222,6 +223,7 @@ def parse_pdf(pdf_path: Path, out_dir: Path) -> list[Product]:
                         pagina=page_num,
                         y_position=y_pos,
                     ))
+            page.flush_cache()  # liberar cache pdfplumber de la página (evita OOM en PDFs grandes)
 
     # 3) Asociar cada producto a la imagen más cercana de SU página
     for prod in products:
