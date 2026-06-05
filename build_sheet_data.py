@@ -9,14 +9,20 @@ Columnas de salida (orden del sheet):
 Las fórmulas (COSTO ARS, PRECIO ARS +10%, EFECTIVO, TRANSFERENCIA) las pone el sheet.
 """
 import json
+import os
 import re
 import csv
 import urllib.request
 from datetime import date
 from pathlib import Path
 
-OUT = Path(r"C:\Users\lucho\Downloads\protrade-pipeline\output")
-USER_IMGS = Path(r"C:\tmp\protrade-ia-full")
+# OUT debe coincidir con run_pipeline.py (WORK/output) para que en easypanel
+# encuentre all-products.json. Antes estaba hardcodeado al path local de Windows
+# -> en el container Linux no existía y el pipeline nunca generaba el catálogo.
+OUT = Path(os.environ.get("PIPELINE_WORK_DIR", "/data")) / "output"
+# Imágenes IA del user (solo existen en local; en easypanel se preservan vía el
+# override del Sheet en fetch_sheet_overrides, y el scan se saltea si no existe).
+USER_IMGS = Path(os.environ.get("PROTRADE_USER_IMGS", r"C:\tmp\protrade-ia-full"))
 SUPA_PUBLIC = "https://arjvysbtvznibqjexcek.supabase.co/storage/v1/object/public/protrade-productos"
 CATEGORIAS_JSON = Path(__file__).parent / "categorias.json"
 # Override de clasificación por IA (por SKU). Generado por el agente IA (pasada + n8n).

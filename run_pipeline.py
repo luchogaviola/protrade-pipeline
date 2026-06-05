@@ -41,6 +41,16 @@ PDF_DIR = WORK / "pdfs"
 STATE_FILE = WORK / "state.json"
 OUT_DIR = WORK / "output"
 
+# ---------- Robustez ----------
+# Descarga: los PDFs del proveedor son grandes (27-55MB c/u, ~200MB total).
+# En easypanel (server 86% RAM, red lenta) 600s no alcanza -> 1800s + reintentos.
+GDOWN_TIMEOUT = int(os.environ.get("GDOWN_TIMEOUT", "1800"))  # 30 min
+GDOWN_RETRIES = int(os.environ.get("GDOWN_RETRIES", "3"))
+# Gate de sanidad: NUNCA pisar el catálogo bueno con uno roto.
+# El catálogo histórico ronda 1900 productos; sin categorias.json todo cae a "Otros".
+MIN_PRODUCTOS = int(os.environ.get("MIN_PRODUCTOS", "1000"))
+MAX_OTROS = int(os.environ.get("MAX_OTROS", "100"))
+
 
 def log(msg: str):
     print(f"[{datetime.now().isoformat(timespec='seconds')}] {msg}", flush=True)
@@ -67,15 +77,30 @@ def save_state(state: dict):
 
 def download_pdfs() -> list[Path]:
     PDF_DIR.mkdir(parents=True, exist_ok=True)
-    log(f"Descargando PDFs del Drive {DRIVE_FOLDER}...")
-    subprocess.run(
-        ["python", "-m", "gdown", "--folder",
-         f"https://drive.google.com/drive/folders/{DRIVE_FOLDER}",
-         "-O", str(PDF_DIR)],
-        check=False, timeout=600,
-    )
+    # Resiliente: reintenta, tolera timeouts/parciales y NUNCA tira excepción.
+    # Devuelve lo que haya en disco, incluido el cache del run anterior (volumen /data).
+    for intento in range(1, GDOWN_RETRIES + 1):
+        log(f"Descargando PDFs del Drive {DRIVE_FOLDER} (intento {intento}/{GDOWN_RETRIES})...")
+        try:
+            subprocess.run(
+                ["python", "-m", "gdown", "--folder",
+                 f"https://drive.google.com/drive/folders/{DRIVE_FOLDER}",
+                 "-O", str(PDF_DIR)],
+                check=False, timeout=GDOWN_TIMEOUT,
+            )
+            break  # gdown terminó (aunque sea parcial); salimos del loop de reintentos
+        except subprocess.TimeoutExpired:
+            log(f"  gdown TIMEOUT a los {GDOWN_TIMEOUT}s (intento {intento})")
+        except Exception as e:  # noqa: BLE001 - no queremos que el cron muera nunca acá
+            log(f"  gdown error (intento {intento}): {e}")
+    # Limpiar descargas a medio bajar (.part) para no parsear basura.
+    for part in PDF_DIR.rglob("*.part"):
+        try:
+            part.unlink()
+        except OSError:
+            pass
     pdfs = list(PDF_DIR.rglob("*.pdf"))
-    log(f"  {len(pdfs)} PDFs descargados")
+    log(f"  {len(pdfs)} PDFs disponibles en disco")
     return pdfs
 
 
@@ -124,7 +149,9 @@ def main():
     # 1-2. Descargar + detectar cambios
     pdfs = download_pdfs()
     if not pdfs:
-        log("Sin PDFs. Abortando.")
+        msg = "ABORTADO: no se bajó ningún PDF ni hay cache en disco. Catálogo en prod INTACTO."
+        log(msg)
+        notify_telegram(f"⚠️ *Pipeline ProTrade* — {msg}")
         return
     changed = detect_changes(pdfs, state)
 
@@ -163,16 +190,39 @@ def main():
     # 4. Subir imágenes proveedor (idempotente)
     upload_proveedor_images(all_products, OUT_DIR / "images")
 
-    # 5. Generar catalogo.json + subir a Supabase
+    # 5. Generar catalogo.json + subir a Supabase (con GATE de sanidad)
     subprocess.run(["python", "build_sheet_data.py"], cwd=str(Path(__file__).parent),
                    check=False, env={**os.environ, "PYTHONIOENCODING": "utf-8"})
     catalog = OUT_DIR / "sheet-data.json"
-    if catalog.exists():
-        url = f"{SUPA_URL}/storage/v1/object/{BUCKET}/data/catalogo.json"
-        requests.post(url, headers={"Authorization": f"Bearer {SUPA_KEY}",
-                                    "Content-Type": "application/json", "x-upsert": "true"},
-                      data=catalog.read_bytes(), timeout=60)
-        log("  catalogo.json subido a Supabase")
+    if not catalog.exists():
+        msg = "ABORTADO: build_sheet_data.py no generó sheet-data.json. Catálogo en prod INTACTO."
+        log(f"  {msg}")
+        notify_telegram(f"⚠️ *Pipeline ProTrade* — {msg}")
+        return
+
+    nuevo = json.loads(catalog.read_text(encoding="utf-8"))
+    total_nuevo = nuevo.get("total", 0)
+    otros_nuevo = (nuevo.get("categorias_count") or {}).get("Otros", 0)
+
+    # No pisar el catálogo bueno con uno roto: pocos productos (descarga parcial)
+    # o "Otros" desbordado (faltan categorias.json/clasificacion_ia.json).
+    if total_nuevo < MIN_PRODUCTOS or otros_nuevo > MAX_OTROS:
+        msg = (f"RECHAZADO (no subido): total={total_nuevo} (mín {MIN_PRODUCTOS}), "
+               f"Otros={otros_nuevo} (máx {MAX_OTROS}). Catálogo en prod QUEDA INTACTO.")
+        log(f"  {msg}")
+        notify_telegram(f"🔴 *Pipeline ProTrade* — {msg}")
+        return
+
+    url = f"{SUPA_URL}/storage/v1/object/{BUCKET}/data/catalogo.json"
+    resp = requests.post(url, headers={"Authorization": f"Bearer {SUPA_KEY}",
+                                "Content-Type": "application/json", "x-upsert": "true"},
+                  data=catalog.read_bytes(), timeout=60)
+    if resp.status_code >= 300:
+        msg = f"Upload a Supabase FALLÓ ({resp.status_code}). Catálogo previo intacto."
+        log(f"  {msg}: {resp.text[:200]}")
+        notify_telegram(f"🔴 *Pipeline ProTrade* — {msg}")
+        return
+    log(f"  catalogo.json subido a Supabase (total={total_nuevo}, Otros={otros_nuevo})")
 
     save_state(state)
 
