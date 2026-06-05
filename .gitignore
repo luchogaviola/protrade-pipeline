@@ -25,3 +25,6 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+
+# Override de clasificación IA (archivo fuente, SÍ versionar)
+!clasificacion_ia.json
