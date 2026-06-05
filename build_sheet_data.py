@@ -57,6 +57,10 @@ def fetch_sheet_overrides() -> dict:
     i_sku = idx("COD. ART.")
     i_pre = idx("precio_manual")
     i_img = idx("imagen_manual")
+    # Clasificador IA ongoing (workflow n8n escribe estas cols para SKUs nuevos;
+    # el user también las puede corregir a mano). Es el override de categoría más alto.
+    i_cat = idx("categoria_ia")
+    i_sub = idx("sub_ia")
     if i_sku < 0:
         print("[overrides] columna 'COD. ART.' no encontrada en Sheet")
         return {}
@@ -77,6 +81,14 @@ def fetch_sheet_overrides() -> dict:
             im = (row[i_img] or "").strip()
             if im:
                 ov["imagen_manual"] = im
+        if i_cat >= 0 and len(row) > i_cat:
+            ci = (row[i_cat] or "").strip()
+            if ci:
+                ov["categoria_ia"] = ci
+        if i_sub >= 0 and len(row) > i_sub:
+            si = (row[i_sub] or "").strip()
+            if si:
+                ov["sub_ia"] = si
         if ov:
             overrides[sku] = ov
     return overrides
@@ -206,6 +218,7 @@ def main():
     matched_manual = 0
     matched_overrides_precio = 0
     matched_overrides_imagen = 0
+    matched_overrides_cat = 0
     categorias_count = {}
     sub_count = {}
     for sku, p in by_sku.items():
@@ -235,11 +248,18 @@ def main():
         categoria, _ = map_categoria(p.get("pdf_source", ""), mapping, def_cat, def_sub)
         # Subcategoría por keyword en ARTICULO (primer-match-wins)
         sub_categoria = assign_subcategoria(categoria, p["descripcion"], sub_index, def_sub)
-        # Override IA por SKU (manda sobre la regla por keyword; corrige criterio, ej. ropa -> Indumentaria)
+        # Override IA por SKU desde el JSON del repo (pasada IA bulk; corrige criterio, ej. ropa -> Indumentaria)
         ia = clasif_ia.get(sku) or clasif_ia.get(sku_s)
         if ia:
             categoria = ia.get("categoria") or categoria
             sub_categoria = ia.get("sub_categoria") or sub_categoria
+        # Override IA ongoing desde el Sheet (clasificador n8n para SKUs nuevos + correcciones manuales del user).
+        # Capa MÁS ALTA: pisa la regla y el JSON. Es como precio_manual pero para categoría.
+        if ov.get("categoria_ia"):
+            categoria = ov["categoria_ia"]
+            matched_overrides_cat += 1
+        if ov.get("sub_ia"):
+            sub_categoria = ov["sub_ia"]
         categorias_count[categoria] = categorias_count.get(categoria, 0) + 1
         sub_key = f"{categoria} / {sub_categoria}"
         sub_count[sub_key] = sub_count.get(sub_key, 0) + 1
@@ -287,7 +307,7 @@ def main():
     print(f"\nTotal filas: {len(rows)}")
     print(f"Con imagen IA del user (override): {matched_manual}")
     print(f"Solo imagen proveedor: {len(rows) - matched_manual}")
-    print(f"Overrides aplicados desde Sheet -> precio_manual: {matched_overrides_precio} | imagen_manual: {matched_overrides_imagen}")
+    print(f"Overrides aplicados desde Sheet -> precio_manual: {matched_overrides_precio} | imagen_manual: {matched_overrides_imagen} | categoria_ia: {matched_overrides_cat}")
     print(f"\nCategorías unificadas:")
     for cat, n in sorted(categorias_count.items(), key=lambda x: -x[1]):
         print(f"  {n:>5}  {cat}")
