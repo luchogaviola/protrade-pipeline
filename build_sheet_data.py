@@ -19,6 +19,11 @@ OUT = Path(r"C:\Users\lucho\Downloads\protrade-pipeline\output")
 USER_IMGS = Path(r"C:\tmp\protrade-ia-full")
 SUPA_PUBLIC = "https://arjvysbtvznibqjexcek.supabase.co/storage/v1/object/public/protrade-productos"
 CATEGORIAS_JSON = Path(__file__).parent / "categorias.json"
+# Override de clasificación por IA (por SKU). Generado por el agente IA (pasada + n8n).
+# El SKU manda sobre la regla por keyword: corrige los casos donde la keyword se equivoca
+# (ej. pijama -> Indumentaria en vez de Hogar). Es la fuente de verdad de categoría/sub
+# para los SKUs que estén acá; el resto cae a la regla por keyword (fallback).
+CLASIF_IA_JSON = Path(__file__).parent / "clasificacion_ia.json"
 
 # Google Sheet: lectura de ediciones manuales del user (precio_manual, imagen_manual).
 # El user edita en el Sheet → el pipeline las lee y las propaga al JSON → la web las respeta.
@@ -160,6 +165,18 @@ def scan_user_skus() -> dict:
     return result
 
 
+def load_clasificacion_ia() -> dict:
+    """Override de categoría/subcategoría por SKU (agente IA). { sku: {categoria, sub_categoria} }.
+    El SKU manda sobre la regla por keyword. Si el archivo no existe, sigue sin override (fallback keyword)."""
+    if not CLASIF_IA_JSON.exists():
+        return {}
+    try:
+        return json.loads(CLASIF_IA_JSON.read_text(encoding="utf-8"))
+    except Exception as e:
+        print(f"[clasif-ia] no se pudo leer ({e}); sigo sin override IA")
+        return {}
+
+
 def main():
     data = json.loads((OUT / "all-products.json").read_text(encoding="utf-8"))
     products = data["products"]
@@ -169,8 +186,9 @@ def main():
     mapping, subcategorias_cfg, def_cat, def_sub = load_categorias()
     sub_index = _build_sub_index(subcategorias_cfg)
     overrides = fetch_sheet_overrides()
+    clasif_ia = load_clasificacion_ia()
     total_sub_rules = sum(len(v) for v in sub_index.values())
-    print(f"Productos: {len(products)} | SKUs con imagen IA: {len(user_skus)} | mapping PDFs: {len(mapping)} | sub rules: {total_sub_rules} | overrides Sheet: {len(overrides)}")
+    print(f"Productos: {len(products)} | SKUs con imagen IA: {len(user_skus)} | mapping PDFs: {len(mapping)} | sub rules: {total_sub_rules} | overrides Sheet: {len(overrides)} | override IA: {len(clasif_ia)}")
 
     hoy = date.today().isoformat()
     rows = []
@@ -211,6 +229,11 @@ def main():
         categoria, _ = map_categoria(p.get("pdf_source", ""), mapping, def_cat, def_sub)
         # Subcategoría por keyword en ARTICULO (primer-match-wins)
         sub_categoria = assign_subcategoria(categoria, p["descripcion"], sub_index, def_sub)
+        # Override IA por SKU (manda sobre la regla por keyword; corrige criterio, ej. ropa -> Indumentaria)
+        ia = clasif_ia.get(sku) or clasif_ia.get(sku_s)
+        if ia:
+            categoria = ia.get("categoria") or categoria
+            sub_categoria = ia.get("sub_categoria") or sub_categoria
         categorias_count[categoria] = categorias_count.get(categoria, 0) + 1
         sub_key = f"{categoria} / {sub_categoria}"
         sub_count[sub_key] = sub_count.get(sub_key, 0) + 1
