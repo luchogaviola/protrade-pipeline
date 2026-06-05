@@ -14,6 +14,7 @@ Config por variables de entorno (ver .env.example).
 """
 from __future__ import annotations
 
+import gc
 import hashlib
 import json
 import os
@@ -179,6 +180,7 @@ def main():
                 all_products.append(d)
         except Exception as e:
             log(f"  ERROR parse {pdf.name}: {e}")
+        gc.collect()  # liberar RAM entre PDFs (server al límite de memoria -> evita OOM/Killed)
 
     log(f"Total productos parseados: {len(all_products)}")
 
