@@ -298,7 +298,9 @@ def main():
         "dolar_blue_venta": blue,
         "fecha": hoy,
         "total": len(rows),
-        "con_imagen_ia": matched_manual,
+        # cuenta real de productos con imagen IA/manual (scan local + override del Sheet).
+        # Antes usaba solo matched_manual (scan local), que en easypanel es 0 -> reportaba 0 falso.
+        "con_imagen_ia": sum(1 for r in rows if r.get("imagen_manual")),
         "columnas": cols,
         "categorias_count": categorias_count,
         "rows": rows,
