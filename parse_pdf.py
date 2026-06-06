@@ -75,6 +75,17 @@ def fetch_dolar_blue_venta() -> float:
         return 1200.0
 
 
+_BLUE_CACHE = None
+
+
+def _blue() -> float:
+    """Dólar blue cacheado (para convertir precios que el proveedor lista en ARS)."""
+    global _BLUE_CACHE
+    if _BLUE_CACHE is None:
+        _BLUE_CACHE = fetch_dolar_blue_venta()
+    return _BLUE_CACHE
+
+
 def parse_pdf(pdf_path: Path, out_dir: Path) -> list[Product]:
     rubro = infer_rubro_from_filename(pdf_path.name)
     print(f"\n=== Parseando: {pdf_path.name} ===")
@@ -205,7 +216,11 @@ def parse_pdf(pdf_path: Path, out_dir: Path) -> list[Product]:
                         continue
                     desc = (row[col_idx["desc"]] or "").strip().replace("\n", " ")
                     bulto_raw = (row[col_idx["bulto"]] or "").strip().replace(".", "")
-                    costo_raw = (row[col_idx["costo"]] or "").strip().replace(",", ".")
+                    costo_cell = (row[col_idx["costo"]] or "").strip()
+                    costo_raw = costo_cell.replace(",", ".")
+                    # Algunos productos vienen con el precio en PESOS (ej "120pesos"),
+                    # no en USD. Si no se detecta, se multiplican x dolar y quedan absurdos.
+                    en_pesos = bool(re.search(r"peso|ar\$", costo_cell, re.I))
                     try:
                         bulto = int(re.sub(r"\D", "", bulto_raw) or 0)
                         costo = float(re.sub(r"[^\d.]", "", costo_raw) or 0)
@@ -213,6 +228,8 @@ def parse_pdf(pdf_path: Path, out_dir: Path) -> list[Product]:
                         continue
                     if bulto <= 0 or costo <= 0:
                         continue
+                    if en_pesos:
+                        costo = round(costo / _blue(), 4)  # ARS -> USD (el resto del pipeline multiplica x dolar)
                     y_pos = top + step * (r_idx + 0.5)
                     products.append(Product(
                         sku=sku_raw,
