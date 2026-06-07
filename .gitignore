@@ -26,5 +26,5 @@ __pycache__/
 .venv/
 venv/
 
-# Override de clasificación IA (archivo fuente, SÍ versionar)
-!clasificacion_ia.json
+# Catálogo generado local (test)
+catalogo.json
