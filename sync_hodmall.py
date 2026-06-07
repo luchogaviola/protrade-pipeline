@@ -155,13 +155,16 @@ def build_catalog(products: list[dict], blue: float, manual_skus: set[str]) -> d
         es_ars = bool(ARS_RE.search(blob))
 
         # Precio final ARS (margen +20%). USD -> x dólar; ARS -> directo.
+        # Precio: los USD se calculan EN VIVO en la web (costo × dólar del momento × margen),
+        # así el dólar es tiempo real y no queda congelado al snapshot horario.
+        # Los pocos en pesos sí van con precio fijo (no dependen del dólar).
         if es_ars:
             costo_usd = 0.0
-            precio_final = round(price1 * MARGIN)
+            precio_final = round(price1 * MARGIN)   # ARS final, fijo
             n_ars += 1
         else:
-            costo_usd = round(price1, 4)
-            precio_final = round(price1 * blue * MARGIN)
+            costo_usd = round(price1, 4)            # la web hace costo × dólar vivo × margen
+            precio_final = ""                        # vacío -> la web calcula en vivo
 
         # Categoría: la del proveedor + overlay Mundial.
         cat = ((p.get("category1") or {}).get("name") or "Otros").strip()
